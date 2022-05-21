@@ -1,0 +1,492 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.05));
+            margin: 0;
+            width: 100vw;
+        }
+        
+        header {
+            float: left;
+            position: relative;
+            width: 100vw;
+            height: 7vh;
+        }
+        
+        select {
+            float: left;
+            position: relative;
+            min-width: 100px;
+            border: none;
+            padding: 9px;
+            background-color: white;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+        }
+        
+        input[type="number"] {
+            float: left;
+            position: relative;
+            border: none;
+            padding: 9px;
+            background-color: white;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            width: 65px;
+            margin-left: 20px;
+        }
+        
+        .zoom-buttons {
+            user-select: none;
+            outline: 0;
+            float: left;
+            position: relative;
+            width: 33px;
+            height: 33px;
+            margin-left: 6px;
+            background-color: rgba(200, 200, 200);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 33px;
+            top: calc(3.5vh - 16.5px);
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity .3s;
+        }
+        
+        .zoom-buttons:hover {
+            opacity: 0.5;
+        }
+        
+        .container-editor {
+            float: left;
+            position: relative;
+            width: 80vw;
+            height: 90vh;
+            background: linear-gradient(45deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.025));
+        }
+        
+        .phone {
+            float: left;
+            position: relative;
+            background-color: white;
+            overflow: hidden;
+        }
+        
+        aside {
+            float: left;
+            position: relative;
+            width: 19vw;
+            margin: 0;
+            height: 90vh;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        
+        aside input {
+            float: left;
+            position: relative;
+            width: 100px;
+            border: none;
+            padding: 9px;
+            background-color: white;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+        }
+        
+        .editor-title {
+            float: left;
+            position: relative;
+            width: 80%;
+            padding: 3px;
+            font-size: 12px;
+            margin-top: 3px;
+            border-radius: 20px;
+            text-align: center;
+            color: rgb(90, 90, 90);
+            font-family: arial;
+            opacity: 1;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .editor-button {
+            float: left;
+            position: relative;
+            left: 10%;
+            width: 80%;
+            padding: 3px;
+            font-size: 12px;
+            margin-top: 3px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, rgb(0, 100, 200), rgb(50, 150, 250));
+            text-align: center;
+            color: white;
+            font-family: arial;
+            opacity: 1;
+        }
+        
+        .btn-top {
+            float: left;
+            position: relative;
+            left: 10px;
+            top: calc(3.5vh - 10px);
+            padding: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 20px;
+            background: linear-gradient(45deg, rgb(0, 100, 200), rgb(50, 150, 250));
+            text-align: center;
+            color: white;
+            font-family: arial;
+            opacity: 1;
+            border: none;
+        }
+        
+        .btn-top:hover {
+            opacity: 0.6;
+            cursor: pointer;
+        }
+        
+        .editor-button:hover {
+            opacity: 0.6;
+            cursor: pointer;
+        }
+        
+        .edition {
+            position: absolute;
+            float: left;
+            transform-origin: center;
+        }
+        
+        .selected {
+            z-index: 100;
+        }
+        
+        #bounding-box {
+            float: left;
+            position: absolute;
+            border-style: dashed;
+            z-index: 0;
+            display: none;
+            transform-origin: center;
+        }
+        
+        .control-box {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: black;
+            cursor: pointer;
+        }
+        
+        .spin-box {
+            position: absolute;
+            float: right;
+            bottom: -20px;
+            right: -20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .left-side {
+            float: left;
+            left: -15px;
+            top: calc(50% - 5px);
+        }
+        
+        .right-side {
+            float: right;
+            right: -15px;
+            top: calc(50% - 5px);
+        }
+        
+        .top-side {
+            float: left;
+            top: -15px;
+            left: calc(50% - 5px);
+        }
+        
+        .bottom-side {
+            float: left;
+            bottom: -15px;
+            left: calc(50% - 5px);
+        }
+        
+        .bottom-left-side {
+            float: left;
+            bottom: -15px;
+            left: -15px;
+        }
+        
+        .top-left-side {
+            float: left;
+            top: -15px;
+            left: -15px;
+        }
+        
+        .top-right-side {
+            float: right;
+            top: -15px;
+            right: -15px;
+        }
+        
+        .label-description {
+            float: left;
+            position: relative;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 7vh;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        
+        input[type="color"] {
+            float: left;
+            position: relative;
+            width: 5vh;
+            height: 5vh;
+            top: 1vh;
+            margin-left: 1vh;
+        }
+        
+        table {
+            font-family: arial;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            float: left;
+            position: relative;
+            margin-top: 20px;
+        }
+        
+        .delete {
+            user-select: none;
+            outline: 0;
+            float: right;
+            position: absolute;
+            padding: 9px;
+            border-radius: 50%;
+            font-size: 21px;
+            font-weight: bold;
+            color: rgb(125, 125, 125);
+            box-shadow: rgba(0, 0, 0, 0.3) 0 0 21px;
+            border-style: solid;
+            border-width: 1px;
+            border-color: rgba(0, 0, 0, 0.03);
+            opacity: 1;
+            transition: opacity .3s;
+            cursor: pointer;
+            bottom: 10px;
+            right: 15px;
+        }
+        
+        .delete:hover {
+            opacity: 0.5;
+        }
+        
+        .d-unselected {
+            background-color: rgba(200, 200, 200, 1);
+        }
+        
+        .d-unselected {
+            background-color: rgba(200, 100, 100, 1);
+        }
+        
+        body,
+        html {
+            overflow: hidden;
+        }
+        
+        .code {
+            float: left;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(90, 90, 90, 0.9);
+            top: 150%;
+            transition: top .3s;
+            z-index: 1000;
+        }
+        
+        .code textarea {
+            float: left;
+            position: relative;
+            width: 90%;
+            height: 90%;
+            left: 5%;
+            top: 5%;
+            border-radius: 6px;
+            border: none;
+        }
+    </style>
+    <script>
+    </script>
+    <script src="virtualizer.js"></script>
+    <script src="editor.js"></script>
+    <script src="TeLa/compiller.js"></script>
+    <script src="TeLa/interpreter.js"></script>
+</head>
+
+<body>
+    <main>
+
+        <header>
+            <label class="label-description">Screen dimension:</label>
+            <select id='phone-dimension' onchange='changeDimension(this.value);'>
+                <option disabled selected>Dimensões (mm)</option>
+                <!-- mobile -->
+                <option value='{"width":64, "height":129, "zoom":100, "mobile":true}'>64 x 129</option>
+                <option value='{"width":73.4, "height":148, "zoom":100, "mobile":true}'>73.4 x 148</option>
+                <option value='{"width":68.1, "height":148., "zoom":100, "mobile":true}'>68.1 x 148.9</option>
+                <option value='{"width":73.4, "height":159.5, "zoom":80, "mobile":true}'>73.4 x 159.5</option>
+                <option value='{"width":76.2, "height":153.5, "zoom":80, "mobile":true}'>76.2 x 153.5</option>
+                <option value='{"width":75, "height":151.7, "zoom":80, "mobile":true}'>75 x 151.7</option>
+                <option value='{"width":58.6, "height":123.8, "zoom":100, "mobile":true}'>58.6 x 123.8</option>
+                <option value='{"width":67.1, "height":138.3, "zoom":100, "mobile":true}'>67.1 x 138.3</option>
+                <option value='{"width":77.9, "height":158.2, "zoom":80, "mobile":true}'>77.9 x 158.2</option>
+                <option value='{"width":70.7, "height":141.5, "zoom":80, "mobile":true}'>70.7 x 141.5</option>
+                <option value='{"width":69.8, "height":136.6, "zoom":100, "mobile":true}'>69.8 x 136.6</option>
+                <option value='{"width":65.9, "height":129.9, "zoom":100, "mobile":true}'>65.9 x 129.9</option>
+                <option value='{"width":66.1, "height":125.3, "zoom":100, "mobile":true}'>66.1 x 125.3</option>
+                <option value='{"width":58.6, "height":115.2, "zoom":100, "mobile":true}'>58.6 x 115.2</option>
+                <!-- laptops -->
+                <option value='{"width":1366, "height":768, "zoom":10, "mobile":false}'>1366 x 768</option>
+                <option value='{"width":1600, "height":900, "zoom":10, "mobile":false}'>1600 x 900</option>
+                <option value='{"width":1920, "height":1080, "zoom":10, "mobile":false}'>1920 x 1080</option>
+                <option value='{"width":2304, "height":1440, "zoom":10, "mobile":false}'>2304 x 1440</option>
+                <option value='{"width":2560, "height":1600, "zoom":5, "mobile":false}'>2560 x 1600</option>
+                <option value='{"width":2560, "height":1440, "zoom":5, "mobile":false}'>2560 x 1440</option>
+                <option value='{"width":2880, "height":1800, "zoom":5, "mobile":false}'>2880 x 1800</option>
+                <option value='{"width":3000, "height":2000, "zoom":5, "mobile":false}'>3000 x 2000</option>
+                <option value='{"width":3200, "height":1800, "zoom":5, "mobile":false}'>3200 x 1800</option>
+                <option value='{"width":3840, "height":2160, "zoom":5, "mobile":false}'>3840 x 2160</option>
+                </select>
+            <label class="label-description">Default unit:</label>
+            <select onchange="if(this.value != 0){changeDefaultUnit(this.value, global_dimension);}" id="unit-select">
+                    <option value="0">various</option>
+                    <option value="1">px</option>
+                    <option value="2">%</option>
+            </select>
+            <label class="label-description">Color pallete:</label>
+            <input type="color" id="c1" onchange="onChangePalette();" />
+            <input type="color" id="c2" onchange="onChangePalette();" />
+            <input type="color" id="c3" onchange="onChangePalette();" />
+            <input type="color" id="c4" onchange="onChangePalette();" />
+            <input type="button" value="Renew" class="btn-top" onclick="generateColorPallete();" />
+            <input type="number" value="100" step="2" id="zoom-input" onchange="changeZoom(this.value);" />
+            <div class="zoom-buttons" onclick="zoomIncrement(2);">+</div>
+            <div class="zoom-buttons" onclick="zoomIncrement(-2);">-</div>
+        </header>
+        <section>
+            <div class="container-editor">
+                <div class="delete d-unselected" id="litter-box" onmouseenter="deleteObjBtn();">&Otimes;</div>
+                <div class='phone' id='global' onclick="selectGlobal(event);" onmousedown="setRedimension(event);" onmouseup="setRedimension(event);" onmousemove="redimension(event);"></div>
+                <div class='code' id='code-box'><textarea id="code-content"></textarea></div>
+                <div class='code' id='json-box'><textarea id="json-content"></textarea></div>
+                <div class='code' id='url-box'><textarea id="url-content"></textarea></div>
+            </div>
+            <aside>
+                <label class="editor-title">Views</label>
+                <div class="editor-button" onclick="setCodeTop('page');interpretCodeFromEditor(document.getElementById('code-content').value);setJSON();setURL();feedNames();">Page</div>
+                <div class="editor-button" onclick="setCodeTop('code-box');document.getElementById('code-content').value = objectsToString();setJSON();setURL();">Code</div>
+                <div class="editor-button" onclick="setCodeTop('json-box');setJSON();setURL();">JSON</div>
+                <div class="editor-button" onclick="setCodeTop('url-box');setJSON();setURL();">URL</div>
+                <label class="editor-title">Elements</label>
+                <div class="editor-button" onclick="addObj('container');">Container</div>
+                <div class="editor-button" onclick="addObj('image');">Image</div>
+                <div class="editor-button" onclick="addObj('button');">Button</div>
+                <div class="editor-button" onclick="addObj('form');">Form</div>
+                <div class="editor-button" onclick="addObj('text');">Text</div>
+                <div class="editor-button" onclick="addObj('label');">Label</div>
+                <div class="editor-button" onclick="addObj('select');">Select</div>
+                <div class="editor-button" onclick="addObj('option');">Option</div>
+                <div class="editor-button" onclick="addObj('template');">Template</div>
+                <table>
+                    <thead>
+                        <th>Property</th>
+                        <th>Value</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Name</td>
+                            <td><select id="name-txt" onchange="selectObject(this.value);"></select>
+                                <!--<input type=text id="name-txt" disabled/>--></td>
+                        </tr>
+                        <tr>
+                            <td>Align</td>
+                            <td><input type=text id="align-txt" onkeyup="changeSelected('align', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Background</td>
+                            <td><input type=text id="background-txt" onkeyup="changeSelected('background', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Border</td>
+                            <td><input type=text id="border-txt" onkeyup="changeSelected('border', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Color</td>
+                            <td><input type=text id="color-txt" onkeyup="changeSelected('color', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Font</td>
+                            <td><input type=text id="font-txt" onkeyup="changeSelected('font', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>For</td>
+                            <td><input type=text id="for_-txt" onkeyup="changeSelected('for_', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Gradient</td>
+                            <td><input type=text id="gradient-txt" onkeyup="changeSelected('gradient', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Height</td>
+                            <td><input type=text id="height-txt" onkeyup="changeSelected('height', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Left</td>
+                            <td><input type=text id="left-txt" onkeyup="changeSelected('left', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Margin</td>
+                            <td><input type=text id="margin-txt" onkeyup="changeSelected('margin', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Rotate</td>
+                            <td><input type=text id="rotate-txt" onkeyup="changeSelected('rotate', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Round</td>
+                            <td><input type=text id="round-txt" onkeyup="changeSelected('round', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Shadow</td>
+                            <td><input type=text id="shadow-txt" onkeyup="changeSelected('shadow', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Top</td>
+                            <td><input type=text id="top-txt" onkeyup="changeSelected('top', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Value</td>
+                            <td><input type=text id="value-txt" onkeyup="changeSelected('value', this.value);" /></td>
+                        </tr>
+                        <tr>
+                            <td>Width</td>
+                            <td><input type=text id="width-txt" onkeyup="changeSelected('width', this.value);" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </aside>
+        </section>
+    </main>
+</body>
+
+</html>
