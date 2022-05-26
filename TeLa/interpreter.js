@@ -206,7 +206,7 @@ function replaceVariable(value, variables, start) {
 
 //find first occurrence of separator char in string
 function indexOfCS(value, start) {
-    var chars = [" ", "\n", ":", "-", "_", "(", ")", "[", "]", "!", "@", "#", "$", , "%", "&", "*", "+", "-", "=", "<", ">", ","];
+    var chars = [" ", "\n", ":", "-", "(", ")", "[", "]", "!", "@", "#", "$", , "%", "&", "*", "+", "-", "=", "<", ">", ","];
     var indexes = chars.map(current => value.indexOf(current, start));
     indexes = indexes.map(index => index == -1 ? Number.MAX_SAFE_INTEGER : index);
 
